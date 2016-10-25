@@ -1,0 +1,2 @@
+Assumptions:
+	1. All punctuation and whitespace will be removed from number input and dictionary. They don't separate possible words.
