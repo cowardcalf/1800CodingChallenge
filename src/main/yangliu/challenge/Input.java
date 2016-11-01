@@ -7,8 +7,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * The input utilities.
+ * It has methods of reading running arguments, reading dictionary file and
+ * reading phone numbers file 
+ * @author Yang Liu
+ *
+ */
 public class Input {
 
+	/**
+	 * Read arguments in console input style
+	 * @param args accept ["-n", phone numbers file path, "-d", dictionary file path]
+	 * @return [phone numbers file path, dictionary file path]
+	 */
 	public static String[] readArguments(String[] args) {
 		String[] result = null;
 		if (args != null) {
@@ -21,12 +33,8 @@ public class Input {
 				if (!hasN && (s.equals("-n") || s.equals("-N"))) {
 					hasN = true;
 					if (i + 1 < args.length) {
-						String phoneNumber = args[i + 1];
-						// Remove all non-numbers
-						phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
-						if (phoneNumber.length() > 0)
-							result[0] = phoneNumber;
-						i++;
+						String phonePath = args[i + 1];
+						result[0] = phonePath;
 					}
 					// have parameter -d or -D
 				} else if (!hasD && (s.equals("-d") || s.equals("-D"))) {
@@ -41,18 +49,45 @@ public class Input {
 		return result;
 	}
 
-	public static List<String> readDictionaryFile(String fileName) {
+	/**
+	 * The general method of reading input file.
+	 * It reads file line by line and do a cleaning of unnecessary syntaxes
+	 * @param fileName the path and file name
+	 * @param replaceRegx regular expression of unnecessary syntaxes
+	 * @return
+	 */
+	public static List<String> readInputFile(String fileName, String replaceRegx){
 		List<String> wordsList = null;
 		if (fileName != null && fileName.length() > 0) {
 			try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 
-				wordsList = stream.map(s -> s.replaceAll("[^a-zA-Z]", "").toLowerCase()).collect(Collectors.toList());
+				wordsList = stream.map(s -> s.replaceAll(replaceRegx, "").toLowerCase()).collect(Collectors.toList());
 
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 
 		}
 		return wordsList;
+	}
+	
+	/**
+	 * Reads dictionary file. Reads letters only.
+	 * Uses readInputFile method
+	 * @param fileName the path and file name
+	 * @return
+	 */
+	public static List<String> readDictionaryFile(String fileName) {
+		return readInputFile(fileName, "[^a-zA-Z]");
+	}
+	
+	/**
+	 * Reads dictionary file. Reads numbers only.
+	 * Uses readInputFile method
+	 * @param fileName the path and file name
+	 * @return
+	 */
+	public static List<String> readPhoneNumberFile(String fileName) {
+		return readInputFile(fileName, "[^0-9]");
 	}
 }

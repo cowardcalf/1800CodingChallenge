@@ -1,3 +1,4 @@
 Assumptions:
-	1. All punctuation and whitespace will be removed from number input and dictionary. They don't separate possible words.
+	1. All punctuation and whitespace will be removed from input number and words. They don't separate possible words.
 	2. A word one line in the dictionary.
+	3. The default file path is root directory of the project.
